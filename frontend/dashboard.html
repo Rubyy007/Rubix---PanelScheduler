@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View live visual grids, booking lists, and manage student allocations.">
+    <title>Live Panel Timelines & Dashboard - Panel Scheduler</title>
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">Panel<span>Scheduler</span></a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link" id="navHome">Home</a>
+                <a href="/booking" class="nav-link" id="navBook">Book Slot</a>
+                <a href="/dashboard" class="nav-link active" id="navDash">Dashboard</a>
+                <a href="/admin" class="nav-link" id="navAdmin">Admin Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Live Alerts Container -->
+        <div id="dashboardAlertContainer"></div>
+
+        <!-- 1. Statistics Cards Section -->
+        <section class="stats-row">
+            <div class="stat-card">
+                <div class="stat-num purple" id="statTotal">0</div>
+                <div class="stat-label">Total Submissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num blue" id="statBooked">0</div>
+                <div class="stat-label">Booked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num yellow" id="statWaitlisted">0</div>
+                <div class="stat-label">Waitlisted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num green" id="statCompleted">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num red" id="statCancelled">0</div>
+                <div class="stat-label">Cancelled</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" style="color: var(--text-muted);" id="statNoShow">0</div>
+                <div class="stat-label">No-Show</div>
+            </div>
+        </section>
+
+        <!-- 2. Interactive Panel Grid Timetable Section -->
+        <section class="glass-card" style="margin-bottom: 2.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <h2 class="glass-title" style="margin-bottom: 0.25rem;">Live Visual Timelines</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Auto-updating block view matching the Google Sheet PANEL_GRID.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <label class="form-label" for="gridDateFilter" style="margin-bottom: 0; white-space: nowrap;">Grid Date:</label>
+                    <input type="date" class="form-control" id="gridDateFilter" style="width: auto; padding: 0.5rem 1rem;">
+                </div>
+            </div>
+
+            <!-- Scrollable Grid Table wrapper -->
+            <div class="dashboard-grid-container">
+                <table class="grid-table">
+                    <thead id="gridTableHeader">
+                        <!-- Filled Dynamically -->
+                    </thead>
+                    <tbody id="gridTableBody">
+                        <!-- Filled Dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. All Bookings Datagrid Listing Section -->
+        <section class="glass-card">
+            <h2 class="glass-title" style="margin-bottom: 0.5rem;">Allocated Interview Directory</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Full historical audit records of students. Manage status steps below.</p>
+            
+            <div style="overflow-x: auto; border: 1px solid var(--glass-border); border-radius: var(--border-radius-sm);">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Target</th>
+                            <th>Interview Time</th>
+                            <th>Panel</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        <!-- Filled Dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Reschedule Overlay Form Modal -->
+    <div class="modal-overlay" id="rescheduleModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 class="modal-title" id="rescheduleTitle">Reschedule Booking</h3>
+                <span class="close-modal" style="font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</span>
+            </div>
+            
+            <form id="rescheduleForm" novalidate>
+                <!-- New Date -->
+                <div class="form-group">
+                    <label class="form-label" for="new_date">New Date</label>
+                    <input type="date" class="form-control" id="new_date" required>
+                </div>
+                
+                <!-- Start/End Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="new_start">Start Time</label>
+                        <input type="time" class="form-control" id="new_start" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="new_end">End Time</label>
+                        <input type="time" class="form-control" id="new_end" required>
+                    </div>
+                </div>
+
+                <!-- Reschedule Reason -->
+                <div class="form-group">
+                    <label class="form-label" for="reschedule_reason">Reason for Rescheduling</label>
+                    <input type="text" class="form-control" id="reschedule_reason" placeholder="e.g. Student requested slot change" required>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group">
+                    <label class="form-label" for="reschedule_notes">Additional Notes</label>
+                    <textarea class="form-control" id="reschedule_notes" placeholder="Update CV links, details, etc."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal" onclick="document.getElementById('rescheduleModal').classList.remove('active')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Reschedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Mock Interview Panel Allocation System. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+
+</body>
+</html>

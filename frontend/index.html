@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Automated scheduling platform for Mock Interviews. Connect students and panels seamlessly.">
+    <title>Mock Interview Panel Allocation System</title>
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">Panel<span>Scheduler</span></a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link active" id="navHome">Home</a>
+                <a href="/booking" class="nav-link" id="navBook">Book Slot</a>
+                <a href="/dashboard" class="nav-link" id="navDash">Dashboard</a>
+                <a href="/admin" class="nav-link" id="navAdmin">Admin Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="welcome-hero">
+            <h1>Mock Interview<br><span style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Panel Allocation</span></h1>
+            <p>
+                Eliminate messy WhatsApp coordinates. Post schedules, automate panel allocations, 
+                and view live visual grids in real-time. Secured with Google Sheets.
+            </p>
+        </div>
+
+        <div class="role-grid">
+            <!-- Student Portal Card -->
+            <div class="glass-card role-card" onclick="window.location.href='/booking'" id="cardStudent">
+                <div class="role-icon">🎓</div>
+                <h2 class="glass-title" style="margin-bottom: 0.5rem;">Student Booking</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                    Submit your mock interview details, dates, and times. Get allocated to Panel-1, Panel-2, Panel-3 instantly or queued on the FIFO waitlist.
+                </p>
+                <a href="/booking" class="btn btn-primary" style="width: 100%;">Book Interview Slot</a>
+            </div>
+
+            <!-- Admin Portal Card -->
+            <div class="glass-card role-card" onclick="window.location.href='/dashboard'" id="cardAdmin">
+                <div class="role-icon">🛠️</div>
+                <h2 class="glass-title" style="margin-bottom: 0.5rem;">Admin & Grid Panel</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                    Monitor live visual timelines, process completions/no-shows, disable/enable panels, execute manual overrides, and audit spreadsheet records.
+                </p>
+                <a href="/dashboard" class="btn btn-secondary" style="width: 100%;">Enter Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mock Interview Panel Allocation System. All rights reserved.</p>
+        <p style="font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.5;">Secure transaction locks active. Single source of truth Google Sheets.</p>
+    </footer>
+
+</body>
+</html>

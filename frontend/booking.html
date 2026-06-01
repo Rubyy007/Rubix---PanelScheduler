@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Request a mock interview slot. Instant allocation to Panel-1, Panel-2, or Panel-3.">
+    <title>Book Mock Interview - Panel Scheduler</title>
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">Panel<span>Scheduler</span></a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link" id="navHome">Home</a>
+                <a href="/booking" class="nav-link active" id="navBook">Book Slot</a>
+                <a href="/dashboard" class="nav-link" id="navDash">Dashboard</a>
+                <a href="/admin" class="nav-link" id="navAdmin">Admin Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="max-width: 700px;">
+        <div class="glass-card">
+            <h1 class="glass-title">Request Mock Interview</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">
+                Select your target company, interview date, and exact times. Please ensure times are aligned to <strong>30-minute intervals</strong> (e.g. 10:00, 10:30, 11:00) and fall between <strong>09:00 and 18:00</strong>.
+            </p>
+
+            <!-- Alerts Box -->
+            <div id="alertContainer"></div>
+
+            <form id="bookingForm" novalidate>
+                <!-- Student Name -->
+                <div class="form-group">
+                    <label class="form-label" for="student_name">Full Name</label>
+                    <input type="text" class="form-control" id="student_name" placeholder="e.g. Jancy" required>
+                </div>
+
+                <!-- Company -->
+                <div class="form-group">
+                    <label class="form-label" for="company">Target Company</label>
+                    <input type="text" class="form-control" id="company" placeholder="e.g. TCS" required>
+                </div>
+
+                <!-- Date -->
+                <div class="form-group">
+                    <label class="form-label" for="interview_date">Interview Date</label>
+                    <input type="date" class="form-control" id="interview_date" required>
+                </div>
+
+                <!-- Time Range Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- Start Time -->
+                    <div class="form-group">
+                        <label class="form-label" for="start_time">Start Time</label>
+                        <input type="time" class="form-control" id="start_time" required>
+                    </div>
+                    <!-- End Time -->
+                    <div class="form-group">
+                        <label class="form-label" for="end_time">End Time</label>
+                        <input type="time" class="form-control" id="end_time" required>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group">
+                    <label class="form-label" for="notes">Notes / Special Instructions</label>
+                    <textarea class="form-control" id="notes" placeholder="Provide any resume links or target roles..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="btnSubmitBooking">
+                    Submit Booking Request
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mock Interview Panel Allocation System. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/booking.js"></script>
+
+</body>
+</html>

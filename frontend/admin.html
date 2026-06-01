@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Control Panel. Manage system configuration, panel active states, manual overrides, and audit trails.">
+    <title>Admin Operations Center - Panel Scheduler</title>
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">Panel<span>Scheduler</span></a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link" id="navHome">Home</a>
+                <a href="/booking" class="nav-link" id="navBook">Book Slot</a>
+                <a href="/dashboard" class="nav-link" id="navDash">Dashboard</a>
+                <a href="/admin" class="nav-link active" id="navAdmin">Admin Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Live Admin Alerts Box -->
+        <div id="adminAlertContainer"></div>
+
+        <!-- Admin Workspace Tabs -->
+        <div class="tab-container">
+            <div class="tab active" data-pane="configPane" id="tabConfig">System Config</div>
+            <div class="tab" data-pane="panelPane" id="tabPanels">Panel Control</div>
+            <div class="tab" data-pane="overridePane" id="tabOverride">Override Allocation</div>
+            <div class="tab" data-pane="auditPane" id="tabAudit">Audit Trail</div>
+        </div>
+
+        <!-- TAB CONTENT PANES -->
+
+        <!-- 1. System Config Pane -->
+        <div class="tab-pane" id="configPane" style="display: block;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; flex-wrap: wrap;">
+                
+                <!-- Left: Rules Config display -->
+                <div class="glass-card">
+                    <h2 class="glass-title" style="font-size: 1.5rem;">System Schedule Boundaries</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        Core operational constraints synchronized with the CONFIG worksheet in Google Sheets.
+                    </p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Operating Hours</label>
+                        <input type="text" class="form-control" id="cfg_hours" readonly style="opacity:0.75;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Slot Increments</label>
+                        <input type="text" class="form-control" id="cfg_slot" readonly style="opacity:0.75;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Allowed Interview Duration</label>
+                        <input type="text" class="form-control" id="cfg_range" readonly style="opacity:0.75;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">FIFO Waitlist Promotions</label>
+                        <input type="text" class="form-control" id="cfg_promote" readonly style="opacity:0.75;">
+                    </div>
+                </div>
+
+                <!-- Right: Panel quick list status -->
+                <div class="glass-card">
+                    <h2 class="glass-title" style="font-size: 1.5rem;">Active Panel Register</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        Current status registry of all defined mock rooms. To alter their states, navigate to the <strong>Panel Control</strong> tab.
+                    </p>
+                    <div id="cfg_panels_list" style="margin-top: 1rem;">
+                        <!-- Filled Dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 2. Panel Control Pane -->
+        <div class="tab-pane" id="panelPane" style="display: none;">
+            <div style="margin-bottom: 1.5rem;">
+                <h2 class="glass-title" style="margin-bottom: 0.25rem;">Panel Activation Register</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Disable or enable interview rooms. Disabled panels will immediately cease taking new allocations. Existing allocations remain preserved.
+                </p>
+            </div>
+            
+            <div id="panelsConfigList" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Filled Dynamically -->
+            </div>
+        </div>
+
+        <!-- 3. Override Allocation Pane -->
+        <div class="tab-pane" id="overridePane" style="display: none;">
+            <div class="glass-card" style="max-width: 700px; margin: 0 auto;">
+                <h2 class="glass-title" style="margin-bottom: 0.25rem;">Manual Allocation Override</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Directly shift a booking to an alternative panel room. The target panel must be active and completely free during that booking's exact scheduled range.
+                </p>
+
+                <form id="movePanelForm" novalidate>
+                    <!-- Select Booking -->
+                    <div class="form-group">
+                        <label class="form-label" for="override_booking">Active Booking</label>
+                        <select class="form-control" id="override_booking" required>
+                            <option value="">-- Select Booking --</option>
+                        </select>
+                    </div>
+
+                    <!-- Target Panel -->
+                    <div class="form-group">
+                        <label class="form-label" for="override_target_panel">Target Panel Destination</label>
+                        <select class="form-control" id="override_target_panel" required>
+                            <option value="">-- Select Target Panel --</option>
+                        </select>
+                    </div>
+
+                    <!-- Override Reason -->
+                    <div class="form-group">
+                        <label class="form-label" for="override_reason">Reason for Manual Move</label>
+                        <input type="text" class="form-control" id="override_reason" placeholder="e.g. Panel 1 tech crash, shifting student" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Perform Manual Reallocation
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 4. Audit Trail Pane -->
+        <div class="tab-pane" id="auditPane" style="display: none;">
+            <div style="margin-bottom: 1.5rem;">
+                <h2 class="glass-title" style="margin-bottom: 0.25rem;">Chronological Audit Trails</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Live feed of all administrative override allocations, cancellations, creations, and waitlist auto-promotions stored in the AUDIT_LOG worksheet.
+                </p>
+            </div>
+            
+            <div id="auditLogsList" class="audit-list">
+                <!-- Filled Dynamically -->
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mock Interview Panel Allocation System. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/admin.js"></script>
+
+</body>
+</html>
